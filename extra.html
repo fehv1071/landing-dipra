@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <style>
+        .dark {
+            background: #0f1210;
+            color: white;
+        }
+        
+        .green {
+            background: #39b54a;
+            color: white;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        *:before,
+        *:after {
+            content: "";
+            display: table;
+        }
+        
+        *:after {
+            clear: both;
+        }
+        
+        html {
+            /* Older browsers */
+            font-size: 100%;
+            /* Modern browsers only need this one */
+            /* Safari <8 and IE <11 */
+            overflow-x: hidden;
+        }
+        
+        @media screen and (min-width: 25rem) {
+            html {
+                font-size: calc(16px + (24 - 16) * (100vw - 400px) / (800 - 400));
+            }
+        }
+        
+        @media screen and (min-width: 25rem) {
+            html {
+                font-size: calc(16px + (24 - 18) * (100vw - 400px) / (800 - 400));
+            }
+        }
+        
+        @media screen and (min-width: 50rem) {
+            html {
+                font-size: calc(16px + (24 - 20) * (100vw - 400px) / (800 - 400));
+            }
+        }
+        
+        body {
+            background: #0f1210;
+            margin: 0px;
+        }
+        
+        .wrapper,
+        .container {
+            position: relative;
+            width: 100%;
+            z-index: 0;
+        }
+        
+        .wrapper {
+            overflow: hidden;
+            height: auto;
+        }
+        
+        .container {
+            min-height: 400px;
+            z-index: -1;
+        }
+        
+        .content {
+            position: relative;
+            padding: 10px 50px;
+        }
+        
+        .inner-content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 50px 0 150px;
+            font-size: 1rem;
+        }
+        
+        .inner-content h2 {
+            font-family: Gilroy, Futura, Franklin Gothic, Segoe UI, Sans-serif;
+            line-height: 1.25;
+        }
+        
+        .inner-content p {
+            font-family: Kepler Std, Georgia, Serif;
+            font-weight: 200;
+            line-height: 1.5;
+        }
+        
+        .inner-content.no-padding-top {
+            padding-top: 0;
+        }
+        
+        .inner-content.padding-top-half {
+            padding-top: 25px;
+        }
+        
+        .navigation {
+            position: relative;
+            z-index: 0;
+            width: 100%;
+            height: 72px;
+        }
+        
+        .sticky {
+            position: inherit;
+            height: inherit;
+            width: inherit;
+        }
+        
+        .sticky.is-active {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: rgba(15, 18, 16, .125);
+            background: linear-gradient(to right, rgba(57, 181, 74, .0625) 0%, rgba(238, 42, 123, .03125) 20%, rgba(15, 18, 16, .0625) 40%, rgba(238, 42, 123, .03125) 60%, rgba(57, 181, 74, .0625) 80%) rgba(15, 18, 16, .925);
+            animation: slide 7s linear infinite alternate;
+            mix-blend-mode: multiply;
+        }
+        
+        .sticky.is-active::before {
+            content: '';
+            display: block;
+            position: inherit;
+            top: inherit;
+            left: inherit;
+            width: inherit;
+            height: inherit;
+            background: url(data:image/png;
+ base64, iVBORw0KGgoAAAANSUhEUgAAAAkAAAAJCAYAAADgkQYQAAAAIklEQVQoU2NkIAIwElDzn4GBgZGQIrAZA6gI7EhsHqGemwBy1QIKYs6QwgAAAABJRU5ErkJggg==);
+            opacity: 0.5;
+        }
+        
+        .nav {
+            height: 72px;
+            font-size: 0;
+            width: 100%;
+        }
+        
+        .nav-logo,
+        .nav-items,
+        .nav-mobile {
+            cursor: pointer;
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+            vertical-align: top;
+        }
+        
+        .nav-logo {
+            position: relative;
+            width: 200px;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .nav-logo h1 {
+            padding-left: 35px;
+            font-family: Gilroy, Futura, Franklin Gothic, Segoe UI, Sans-serif;
+            font-size: 21px;
+            font-weight: 700;
+            line-height: 2;
+            letter-spacing: 2.5px;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+        
+        .nav-items {
+            display: none;
+            width: calc(100% - 200px);
+            height: inherit;
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            text-align: right;
+        }
+        
+        @media screen and (min-width: 40rem) {
+            .nav-items {
+                display: inline-block;
+            }
+        }
+        
+        .nav-items .nav-item {
+            position: relative;
+            display: inline-block;
+            height: inherit;
+            font-family: Gilroy, Futura, Franklin Gothic, Segoe UI, Sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 3.5;
+            vertical-align: middle;
+            overflow: hidden;
+        }
+        
+        .nav-items .nav-item:last-of-type {
+            margin-right: 50px;
+        }
+        
+        .nav-items .nav-item::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: block;
+            width: 100%;
+            height: 2px;
+            border-bottom: 2px solid #39b54a;
+            transform: translateX(-100%);
+            transition: all 375ms ease-in-out 0ms;
+            z-index: -1;
+            opacity: 0;
+        }
+        
+        .nav-items .nav-item.current {
+            border-bottom: 2px solid #39b54a;
+        }
+        
+        .nav-items .nav-item.border-slide-in::before {
+            transform: translateX(0%);
+            opacity: 1;
+        }
+        
+        .nav-items .nav-item.border-slide-out::before {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        
+        @media screen and (min-width: 40rem) {
+            .nav-items .nav-item {
+                font-size: 16px;
+                line-height: 4.375;
+            }
+        }
+        
+        .nav-items .nav-link {
+            display: block;
+            padding: 0 20px;
+            text-decoration: none;
+            color: currentColor;
+        }
+        
+        .nav-mobile {
+            position: relative;
+            float: right;
+            top: 0.875rem;
+            right: 1.25rem;
+            width: 38px;
+            height: 38px;
+            background: #f2f2f2;
+            border-radius: 50%;
+            border: 0;
+            cursor: pointer;
+        }
+        
+        .nav-mobile::before {
+            content: '';
+            display: block;
+            position: absolute;
+            width: inherit;
+            height: inherit;
+            border-radius: inherit;
+            background: rgba(57, 181, 74, 0.875);
+            transition: opacity 425ms ease-in-out 20ms;
+            will-change: opacity;
+            opacity: 1;
+        }
+        
+        .nav-mobile .nav-mobile-rects {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            margin: 12px 0;
+        }
+        
+        .nav-mobile .nav-mobile-rect {
+            display: block;
+            width: 50%;
+            height: 2px;
+            margin: 0 auto 4px;
+            background: white;
+            transition: transform 275ms cubic-bezier(1, -0.5, 0, 1.5) 0ms, width 250ms ease-in-out 0ms;
+            will-change: transform;
+        }
+        
+        .nav-mobile .nav-mobile-rect::before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: inherit;
+            background: #0f1210;
+            transition: opacity 375ms ease-in-out 0ms;
+            will-change: opacity;
+            opacity: 0;
+        }
+        
+        .nav-mobile:hover::before {
+            opacity: 0;
+        }
+        
+        .nav-mobile:hover .nav-mobile-rect::before {
+            opacity: 1;
+        }
+        
+        .nav-mobile:hover .nav-mobile-rect:nth-of-type(1) {
+            transform: translateY(6px) rotateZ(45deg);
+        }
+        
+        .nav-mobile:hover .nav-mobile-rect:nth-of-type(2) {
+            width: 0%;
+            opacity: 0;
+        }
+        
+        .nav-mobile:hover .nav-mobile-rect:nth-of-type(3) {
+            transform: translateY(-6px) rotateZ(135deg);
+        }
+        
+        @media screen and (min-width: 40rem) {
+            .nav-mobile {
+                display: none;
+            }
+        }
+        
+        .project {
+            z-index: 0;
+            font-size: 0;
+        }
+        
+        .project .project-content {
+            position: relative;
+            display: inline-block;
+            z-index: 1;
+            margin: 1.5rem 0 1.5rem;
+            font-size: 1rem;
+            text-align: left;
+            color: white;
+        }
+        
+        @media screen and (min-width: 35rem) {
+            .project .project-content {
+                text-align: center;
+            }
+            .project .project-content-left {
+                float: left;
+            }
+            .project .project-content-right {
+                float: right;
+            }
+        }
+        
+        .project .project-content-double {
+            margin: 3rem 0 3rem;
+        }
+        
+        .project .project-contract {
+            margin: 0 auto;
+            font-family: Kepler Std, Georgia, Serif;
+        }
+        
+        .project .project-name {
+            max-width: 220px;
+            margin: 0;
+            font-weight: 600;
+            letter-spacing: 0.03125rem;
+            line-height: 1.25;
+        }
+        
+        @media screen and (min-width: 35rem) {
+            .project .project-name {
+                max-width: 100%;
+            }
+        }
+        
+        .project .project-arrow {
+            position: relative;
+            display: inline-block;
+            float: none;
+            width: 38px;
+            height: 38px;
+            margin: 0 0 0 0.75rem;
+            border-radius: 50%;
+            transition: all 625ms cubic-bezier(1, -0.5, 0, 1.875);
+            will-change: scale;
+            cursor: pointer;
+        }
+        
+        .project .project-arrow:hover {
+            transform: scale(1.1);
+            transform-origin: 50% 50%;
+        }
+        
+        @media screen and (min-width: 35rem) {
+            .project .project-arrow {
+                float: right;
+            }
+        }
+        
+        @media screen and (min-width: 50rem) {
+            .project .project-arrow {
+                margin: 0.3125rem 0 0.125rem 0.75rem;
+            }
+        }
+        
+        .project .project-hr {
+            width: 37.5%;
+            height: 0.125rem;
+            margin: 0.5rem 0;
+            background: white;
+            border: 0;
+        }
+        
+        @media screen and (min-width: 35rem) {
+            .project .project-hr {
+                width: 75%;
+                margin: 0.5rem auto;
+            }
+        }
+        
+        .project .project-role {
+            margin: 0 auto 0 0;
+            max-width: 220px;
+            line-height: 1.25;
+        }
+        
+        @media screen and (min-width: 35rem) {
+            .project .project-role {
+                margin: 0 auto;
+                max-width: 100%;
+                text-align: center;
+            }
+        }
+        
+        .project-display {
+            position: absolute;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            background: white;
+            transform-origin: 50% 50%;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .project-display-left {
+            float: left;
+            left: -20%;
+        }
+        
+        .project-display-right {
+            float: right;
+            left: 70%;
+        }
+        
+        .project-display .project-display-inner {
+            position: relative;
+            background: linear-gradient(to top left, #0f1210 10%, rgba(15, 18, 16, .875) 140%) rgba(15, 18, 16, .375);
+            border-radius: 0.225rem;
+        }
+        
+        .project-display .project-display-inner.iphone {
+            width: calc(100% - 2.5rem);
+            height: calc(100% - 5.75rem);
+            margin: 2.875rem 1.25rem;
+        }
+        
+        .project-display .project-display-inner.iphone .iphone-top {
+            position: relative;
+            margin-top: -1.25rem;
+            margin-left: 45%;
+            width: 20%;
+            height: 0.25rem;
+            background: #0f1210;
+            border-radius: 0.25rem;
+        }
+        
+        .project-display .project-display-inner.iphone .iphone-top::before,
+        .project-display .project-display-inner.iphone .iphone-top::after {
+            content: '';
+            position: absolute;
+            display: block;
+            background: inherit;
+            border-radius: 50%;
+        }
+        
+        .project-display .project-display-inner.iphone .iphone-top::before {
+            top: -0.0625rem;
+            left: -1.125rem;
+            width: 0.375rem;
+            height: 0.375rem;
+            background: rgba(15, 18, 16, .875);
+        }
+        
+        .project-display .project-display-inner.iphone .iphone-top::after {
+            top: -0.75rem;
+            left: calc(50% - .3rem);
+            width: 0.3rem;
+            height: 0.3rem;
+            background: rgba(15, 18, 16, .875);
+        }
+        
+        .project-display .project-display-inner.iphone .iphone-btm {
+            position: absolute;
+            bottom: -2.425rem;
+            left: calc(50% + 1rem);
+            width: 2rem;
+            height: 2rem;
+            border: 0.125rem solid rgba(15, 18, 16, .125);
+            border-radius: 50%;
+        }
+        
+        .project-display .project-display-inner.ipad {
+            width: calc(100% - 5.75rem);
+            height: calc(100% - 2.5rem);
+            margin: 1.25rem 2.875rem;
+        }
+        
+        .project-display .project-display-inner.ipad .ipad-top {
+            position: relative;
+            margin-top: 50%;
+            margin-left: -1.25rem;
+            width: 0.25rem;
+            height: 20%;
+            background: #0f1210;
+            border-radius: 0.25rem;
+        }
+        
+        .project-display .project-display-inner.ipad .ipad-top::before,
+        .project-display .project-display-inner.ipad .ipad-top::after {
+            content: '';
+            position: absolute;
+            display: block;
+            background: inherit;
+            border-radius: 50%;
+        }
+        
+        .project-display .project-display-inner.ipad .ipad-top::before {
+            top: -1.125rem;
+            left: -0.0625rem;
+            width: 0.375rem;
+            height: 0.375rem;
+            background: rgba(15, 18, 16, .875);
+        }
+        
+        .project-display .project-display-inner.ipad .ipad-top::after {
+            top: calc(50% - .3rem);
+            left: -0.75rem;
+            width: 0.3rem;
+            height: 0.3rem;
+            background: rgba(15, 18, 16, .875);
+        }
+        
+        .project-display .project-display-inner.ipad .ipad-btm {
+            position: absolute;
+            top: calc(50% - 1rem);
+            right: -2.425rem;
+            width: 2rem;
+            height: 2rem;
+            border: 0.125rem solid rgba(15, 18, 16, .125);
+            border-radius: 50%;
+        }
+        
+        .project-display.ce-1 {
+            top: -17.5%;
+            left: 80%;
+            min-width: 20rem;
+            min-height: 35rem;
+            max-width: 750px;
+            background: white;
+            border-radius: 1rem;
+            transform: skewX(-9deg) skewY(-6deg);
+            transition: all 250ms ease-in-out;
+        }
+        
+        @media screen and (min-width: 30rem) {
+            .project-display.ce-1 {
+                top: -25%;
+                left: 75%;
+            }
+        }
+        
+        @media screen and (min-width: 40rem) {
+            .project-display.ce-1 {
+                top: -27.5%;
+                left: 70%;
+            }
+        }
+        
+        @media screen and (min-width: 50rem) {
+            .project-display.ce-1 {
+                top: -35%;
+            }
+        }
+        
+        @media screen and (min-width: 65rem) {
+            .project-display.ce-1 {
+                top: -37.5%;
+            }
+        }
+        
+        @media screen and (min-width: 75rem) {
+            .project-display.ce-1 {
+                top: -42.5%;
+            }
+        }
+        
+        .project-display.ce-1 .iphone {
+            background: linear-gradient(to top left, rgba(15, 18, 16, .875) 10%, rgba(255, 255, 255, .5) 30%, rgba(15, 18, 16, .0875) 60%), url('http://placekitten.com/750/1536') scroll no-repeat 100% 50% / cover;
+            background-blend-mode: hard-light;
+            box-shadow: inset 0 0 4rem 0 rgba(0, 0, 0, .375);
+        }
+        
+        .project-display.ce-2 {
+            top: calc(22.5rem - 5%);
+            left: -25%;
+            min-width: 29.25rem;
+            min-height: 17.5rem;
+            height: auto;
+            border-radius: 1rem;
+            transform: skew(12deg) rotate(-6deg);
+            transition: all 0ms ease-in-out;
+        }
+        
+        @media screen and (min-width: 30rem) {
+            .project-display.ce-2 {
+                top: calc(16.25rem - 5%);
+                left: -10%;
+            }
+        }
+        
+        @media screen and (min-width: 50rem) {
+            .project-display.ce-2 {
+                top: 20%;
+                left: calc(-30% - 15rem);
+                transform: skew(9deg) rotate(-3deg);
+            }
+        }
+        
+        @media screen and (min-width: 60rem) {
+            .project-display.ce-2 {
+                left: calc(-35% - 15rem);
+            }
+        }
+        
+        @media screen and (min-width: 65rem) {
+            .project-display.ce-2 {
+                left: calc(-40% - 15rem);
+            }
+        }
+        
+        .project-display.ce-2 .ipad {
+            background: linear-gradient(to top left, rgba(15, 18, 16, .875) 10%, rgba(255, 255, 255, .5) 30%, rgba(15, 18, 16, .0875) 60%), url('http://placekitten.com/2048/1536') scroll no-repeat 100% 0% / cover;
+            background-blend-mode: hard-light;
+            box-shadow: inset 0 0 4rem 0 rgba(0, 0, 0, .375);
+        }
+        
+        .shp:before,
+        .shp:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .shp-0:after {
+            background: linear-gradient(to bottom, rgba(15, 18, 16, 0) 65%, rgba(15, 18, 16, 0.375) 110%);
+            height: 15rem;
+            top: unset;
+            bottom: 1.5rem;
+            transform: skewY(-6deg);
+            opacity: 0.0625;
+        }
+        
+        .shp-1:before,
+        .shp-1:after {
+            background-color: inherit;
+        }
+        
+        .shp-1:before {
+            transform: skewY(-6deg);
+            transform-origin: 0% 50%;
+        }
+        
+        .shp-1:after {
+            background-image: linear-gradient(170deg, #39b54a 50%, #ee2a7b 235%);
+            transform: skewY(9deg);
+            transform-origin: -1% 50%;
+        }
+        
+        .shp-2::before {
+            z-index: 1;
+            top: -1rem;
+            width: 100%;
+            height: 15rem;
+            background: linear-gradient(to bottom, rgba(15, 18, 16, 0.0375) -65%, rgba(15, 18, 16, 0) 65%) #0f1210;
+            transform: skewY(9deg);
+        }
+        
+        .shp-2::after {
+            z-index: -1;
+            top: 3.5rem;
+            width: 100%;
+            height: 15rem;
+            margin-top: 2rem;
+            background: linear-gradient(180deg, rgba(15, 18, 16, 0) 65%, rgba(15, 18, 16, .375) 180%);
+            transform: skewY(-6deg);
+        }
+        
+        .shp-3 {
+            padding-bottom: 200px;
+        }
+        
+        .shp-3:before,
+        .shp-3:after {
+            background-color: inherit;
+        }
+        
+        .shp-3:before {
+            transform: skewY(-6deg);
+            transform-origin: 0% 50%;
+        }
+        
+        .shp-3:after {
+            background-image: linear-gradient(170deg, #39b54a 50%, #ee2a7b 235%);
+            transform: skewY(9deg);
+            transform-origin: -1% 50%;
+        }
+        
+        .shp-4::before,
+        .shp-4::after {
+            background: white;
+        }
+        
+        .shp-4::before {
+            transform: skewY(9deg);
+            transform-origin: 100% 50%;
+        }
+        
+        @-webkit-keyframes slide {
+            from {
+                background-position: 0rem;
+            }
+            to {
+                background-position: 80rem;
+            }
+        }
+        
+        @-webkit-keyframes border-slide-back {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(-100%);
+            }
+        }
+    </style>
+</head>
+
+
+
+<body>
+
+    <div class="wrapper">
+
+        </header>
+        <section class="container dark shp shp-0">
+            <section class="content">
+                <section class="inner-content padding-top-half">
+                    <h2>Hi, I'm Todd Magnusson, a Front&nbsp;End&nbsp;Developer &amp; UX&nbsp;Designer living and working in Minnesota's Greater Twin&nbsp;Cities Area.</h2>
+                    <p>I make websites and web applications.<br> Interested? Drop me a line.</p>
+                </section>
+            </section>
+        </section>
+        <section class="container green shp shp-1">
+            <section class="content">
+                <article class="inner-content project">
+                    <section class="project-content project-content-left">
+                        <p class="project-contract">July 2016 • Collegis Education</p>
+                        <h2 class="project-name">Rasmussen Nursing PPC
+                            <a class="project-arrow dark" role="button"></a>
+                        </h2>
+                        <hr class="project-hr">
+                        <p class="project-role">
+                            <small>Role: Front-End Development, Live&nbsp;Style&nbsp;Guide</small>
+                        </p>
+                    </section>
+                    <section class="project-display project-display-right ce-1">
+                        <div class="project-display-inner iphone">
+                            <div class="iphone-top"></div>
+                            <div class="iphone-btm"></div>
+                        </div>
+                    </section>
+                </article>
+            </section>
+        </section>
+        <section class="container black shp shp-2">
+            <section class="content">
+                <article class="inner-content project">
+                    <section class="project-content project-content-right project-content-double">
+                        <p class="project-contract">June 2016 • Collegis Education</p>
+                        <h2 class="project-name">Rasmussen Flex&nbsp;Choice
+                            <a class="project-arrow green" role="button"></a>
+                        </h2>
+                        <hr class="project-hr">
+                        <p class="project-role">
+                            <small>Role: Front-End Development</small>
+                        </p>
+                    </section>
+                    <section class="project-display project-display-left ce-2">
+                        <div class="project-display-inner ipad">
+                            <div class="ipad-top"></div>
+                            <div class="ipad-btm"></div>
+                        </div>
+                    </section>
+                </article>
+            </section>
+        </section>
+        <section class="container green shp shp-3">
+            <section class="content">
+                <article class="inner-content project">
+                    <section class="project-content project-content-left">
+                        <p class="project-contract">April 2016 • 3M eTransformation</p>
+                        <h2 class="project-name">3M E-Comm. H.A.M.R.
+                            <a class="project-arrow dark" role="button"></a>
+                        </h2>
+                        <hr class="project-hr">
+                        <p class="project-role">
+                            <small>Role: Front-End Development</small>
+                        </p>
+                    </section>
+                </article>
+            </section>
+        </section>
+        <section class="container black shp shp-4"></section>
+    </div>
+
+
+</body>
+
+
+
+</html>
